@@ -21,10 +21,8 @@ unsigned long can_timer, read_timer, sw_timer;
 volatile bool motor_enable = true;
 
 float x_desired = 340.0, y_desired = 220.0;  //correspond to the center of the camera view
-float pitch=0.0, yaw=0.0;
-float theta1=0.0, theta2=0.0;
-float omega1=0.0, omega2=0.0;
 float dist_z = 300;
+float omega1 = 0.0, omega2=0.0;
 
 MCP_CAN CAN(9); 
 RMDServoState servo1(0x141, &CAN, CAN_WAIT_TIMEOUT_US);
@@ -111,7 +109,7 @@ void loop() {
 
 void inverseKinematics()
 {
-    yaw                 =  0.0;
+    float yaw=0.0;
 
     float delta         =  x_desired - puck_x;
     float dot_prod      =  puck_x*x_desired + pow(dist_z,2.0);
@@ -119,9 +117,9 @@ void inverseKinematics()
     float current_mag   =  sqrt( pow(puck_x, 2.0) +  pow(dist_z, 2.0));
 
     float sgn           = (delta>0) - (delta<0);
-    pitch               = (sgn)*(acos(dot_prod/(desired_mag*current_mag)) * 180.0/PI);
-    theta1              = 0.5/EFFECTIVE_GEAR_RATIO*(pitch+yaw);
-    theta2              = 0.5/EFFECTIVE_GEAR_RATIO*(-pitch+yaw);
-    omega1              = 15.0*(theta1);
-    omega2              = 15.0*(theta2);
+    float pitch               = (sgn)*(acos(dot_prod/(desired_mag*current_mag)) * 180.0/PI);
+    float theta1              = 0.5/EFFECTIVE_GEAR_RATIO*(pitch+yaw);
+    float theta2              = 0.5/EFFECTIVE_GEAR_RATIO*(-pitch+yaw);
+    omega1              = 8.0*(theta1);
+    omega2              = 8.0*(theta2);
 }
