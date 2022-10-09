@@ -1,0 +1,14 @@
+<launch>
+		<arg name="source" default="-s 0"/>
+		<!-- Run all the essential nodes to operate the robot -->
+		<!-- <node pkg="rosserial_server" type="socket_node" name="socket_node" respawn="true"/> -->
+		<!-- <node pkg="rqt_plot" type="rqt_plot" name="puck_state_plot" respawn="false" args="/puck_state/position/x:z"/>
+		<node pkg="rqt_plot" type="rqt_plot" name="striker_state_plot" respawn="false" args="/motor_angles/orientation/y:z"/> -->
+		<node pkg="object_track" type="camera_main.py" name="camera_main" args="$(arg source)"
+			output="screen" respawn="false" required="true"/>
+		<node pkg="object_track" type="position_node.py" name="position_node" output="screen"/>
+		<node pkg="object_track" type="kalman_filter.py" name="kalman_filter_node" output="screen"/>
+		<!-- <node pkg="object_track" type="kinematics_test.py" name="kinematics" output="screen"/> -->
+		<!-- <node pkg="object_track" type="playing_strategy.py" name="playing_strategy" output="screen"/>  -->
+		<node pkg="object_track" type="defense.py" name="defense_strategy" output="screen"/> 
+</launch>
